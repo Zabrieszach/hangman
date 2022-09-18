@@ -46,6 +46,14 @@ const palavras = [
         nome: "ROSA",
         categoria: "FLOR"
     },
+    palavra011={
+        nome: "HOMEM ARANHA",
+        categoria: "FILME"
+    },
+    palavra012={
+        nome: "SCOOBY DOO",
+        categoria: "FILME"
+    }
 ]
 
 criarPalavraSecreta();
@@ -72,14 +80,27 @@ function montarPalavranaTela(){
     //aqui estou criando o espaço vazio que a palavra sorteada deve ocupar.
 
     for(i = 0 ; i < palavraSecretaSorteada.length; i++){     //dentro do for, eu quero que o numero de espaços seja igual ao comprimento da palavra sorteada
-        if(listaDinamica[i]==undefined){                    //ou seja, se a variavel lista estiver vazia (por padrao ela esta), eu quero que ela assuma um valor de "espaço" para cada letra da palavra sorteada. ou seja, "ovo" geraria 3 espaços
-            listaDinamica[i] = "&nbsp;"
-            palavraTela.innerHTML = palavraTela.innerHTML + "<div class='letras'>" + listaDinamica[i] + "</div>"
+        if(listaDinamica[i] == undefined){                    //ou seja, se a variavel lista estiver vazia (por padrao ela esta), eu quero que ela assuma um valor de "espaço" para cada letra da palavra sorteada. ou seja, "ovo" geraria 3 espaços
+            if(palavraSecretaSorteada[i] ==" "){
+                listaDinamica[i] = " ";
+                palavraTela.innerHTML = palavraTela.innerHTML + "<div class='letrasEspaco'>" + listaDinamica[i] + "</div>"
+             }
+                else{
+                    listaDinamica[i] = "&nbsp;"
+                    palavraTela.innerHTML = palavraTela.innerHTML + "<div class='letras'>" + listaDinamica[i] + "</div>"
+                }
         }
         else{
-            palavraTela.innerHTML = palavraTela.innerHTML + "<div class='letras'>" + listaDinamica[i] + "</div>"
+            if(palavraSecretaSorteada[i] ==" "){
+                listaDinamica[i] = " ";
+                palavraTela.innerHTML = palavraTela.innerHTML + "<div class='letrasEspaco'>" + listaDinamica[i] + "</div>"
+             }
+                else{
+                    palavraTela.innerHTML = palavraTela.innerHTML + "<div class='letras'>" + listaDinamica[i] + "</div>"
+                }
         }
     }
+    console.log(palavraTela);
 }
 
 //aqui eu vou passar o valor da letra clicada para dentro de uma funçõao que vai concatenar com o id da letra clicada
@@ -107,6 +128,10 @@ function comparaListas(letra){
     if(pos < 0){ //se nao existir a letra, ele perde uma tentativa e adicionamos a imagem da forca
         tentativas--;
        carregaImagemForca();
+
+       if(tentativas == 0){
+            abreModal("OPS!", "Não foi dessa vez... a palavra secreta era <br>" + palavraSecretaSorteada);
+        }
     }
         else{ //agora, se a letra existir
             for(i = 0; i < palavraSecretaSorteada.length; i++){ //eu vou novamente gerar os espaços em branco (dessa vez só o index)
@@ -124,6 +149,7 @@ function comparaListas(letra){
     }
     if(vitoria == true){
         //mensagem na tela
+        abreModal("Parabéns!", "Você venceu!!!");
         tentativas = 0;
 
     }
@@ -151,3 +177,26 @@ function carregaImagemForca(){
             break;   
         }
 }
+
+
+//função para chamar a modal
+function abreModal(titulo, mensagem){
+    let modalTitulo = document.getElementById("exampleModalLabel");
+    modalTitulo.innerText = titulo;
+
+
+    let modalBody = document.getElementById("modalBody");
+    modalBody.innerHTML = mensagem;
+    
+    $("#myModal").modal({
+        show: true
+    });
+}
+
+
+//reiniciando o jogo com um código nativo do js
+let btnReiniciar = document.querySelector("#BTN_reiniciar"); //aqui estou selecionando esse id e dizendo que ele vai ser o valor dessa variável
+
+btnReiniciar.addEventListener("click", function(){
+    location.reload(); //esse é o c´´odigo nativo que reinicia o navegador
+});
